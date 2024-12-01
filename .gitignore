@@ -1,1 +1,10 @@
-days/*/input.txt
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+/lib/**/input.txt
