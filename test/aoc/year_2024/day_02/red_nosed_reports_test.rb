@@ -18,7 +18,8 @@ module Aoc
       describe 'part two' do
         describe 'dampened variations' do
           it 'shows all dampened variations with one level removed' do
-            assert_equal [[0, 1, 2], [1, 2], [0, 2], [0, 1]], Day02.new.dampened_variations([0, 1, 2])
+            expected_dampened_variations = [[1, 2], [0, 2], [0, 1], [0, 1, 2]]
+            assert_equal expected_dampened_variations, Day02.new.dampened_variations([0, 1, 2])
           end
         end
 

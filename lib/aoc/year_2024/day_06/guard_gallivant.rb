@@ -122,21 +122,9 @@ module Aoc
         obstructions = parsed.dig(:obstructions)
         width, height = parsed.dig(:size)
 
-        visited_positions = Set.new
-
-        while Day06.inside_map(guard_position, width, height) do
-          position_in_front = in_front(guard_position, guard_direction)
-
-          while obstructions.include?(position_in_front)
-            guard_direction = Day06.turn_right(guard_direction)
-            position_in_front = in_front(guard_position, guard_direction)
-          end
-
-          visited_positions << guard_position
-          guard_position = position_in_front
-        end
-
-        visited_positions.size
+        walk_path(guard_position, guard_direction, obstructions, width, height).uniq do |position|
+          position[0..1]
+        end.count
       end
 
       def in_front(position, direction)

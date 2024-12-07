@@ -79,17 +79,21 @@ module Aoc
         total
       end
 
+      def cell_in_direction(grid, x, y, direction)
+        x = x + DIRECTIONS[direction][0]
+        y = y + DIRECTIONS[direction][1]
+        grid[y][x]
+      end
+
       def diagonal_words(grid, x, y)
         grid_width = grid[0].length
         grid_height = grid.length
 
-        # puts "x: #{x} between #{1} #{grid_width - 2}: #{x.between?(1, grid_width - 2)}"
-
         return [nil, nil] unless x.between?(1, grid_width - 2)
         return [nil, nil] unless y.between?(1, grid_height - 2)
 
-        north_east_to_south_west = grid[DIRECTIONS[:north_east][1] + y][ DIRECTIONS[:north_east][0] + x] + grid[y][x] + grid[DIRECTIONS[:south_west][1] + y][ DIRECTIONS[:south_west][0] + x]
-        south_east_to_north_west = grid[DIRECTIONS[:south_east][1] + y][DIRECTIONS[:south_east][0] + x] + grid[y][x] + grid[DIRECTIONS[:north_west][1] + y][DIRECTIONS[:north_west][0] + x]
+        north_east_to_south_west = cell_in_direction(grid, x, y, :north_east) + grid[y][x] + cell_in_direction(grid, x, y, :south_west)
+        south_east_to_north_west = cell_in_direction(grid, x, y, :south_east) + grid[y][x] + cell_in_direction(grid, x, y, :north_west)
 
         [north_east_to_south_west, south_east_to_north_west]
       end
@@ -97,17 +101,13 @@ module Aoc
       def part_two(input)
         grid = parse(input)
 
-        total = 0
-
-        grid.each.with_index do |row, y|
-          row.each.with_index do |_col, x|
-            total += 1 if diagonal_words(grid, x, y).all? do |word|
-              word == 'MAS' || word == 'MAS'.reverse
+        grid.each_with_index.sum do |row, y|
+          row.each_with_index.count do |_col, x|
+            diagonal_words(grid, x, y).all? do |word|
+              ['MAS', 'MAS'.reverse].include?(word)
             end
           end
         end
-
-        total
       end
     end
   end

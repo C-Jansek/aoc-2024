@@ -31,6 +31,7 @@ module Aoc
 
       def self.answerable(expected_answer, numbers, concatenation_allowed = false)
         answers = [numbers.first]
+
         numbers[1..].each do |number|
           multiplied = answers.map do |answer|
             answer * number
@@ -47,6 +48,7 @@ module Aoc
                           end
           answers = (multiplied + summed + concatenation).uniq
         end
+
         answers.include?(expected_answer)
       end
 
@@ -55,7 +57,7 @@ module Aoc
 
         parsed.map do |equation|
           equation.dig(:answer) if Day07.answerable(equation.dig(:answer), equation.dig(:numbers))
-        end.reject(&:nil?).sum
+        end.compact.sum
       end
 
       def part_two(input)
@@ -63,7 +65,7 @@ module Aoc
 
         parsed.map do |equation|
           equation.dig(:answer) if Day07.answerable(equation.dig(:answer), equation.dig(:numbers), true)
-        end.reject(&:nil?).sum
+        end.compact.sum
       end
     end
   end

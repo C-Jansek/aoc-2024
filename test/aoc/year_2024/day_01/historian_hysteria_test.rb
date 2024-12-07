@@ -18,7 +18,7 @@ module Aoc
       describe 'part two' do
         it 'provides the correct answer for the example' do
           example_input = Day01.example_input
-          assert_equal 11, Day01.new.part_two(example_input)
+          assert_equal 31, Day01.new.part_two(example_input)
         end
 
         it 'provides the correct answer for the personal input' do

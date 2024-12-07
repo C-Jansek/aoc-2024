@@ -42,7 +42,7 @@ module Aoc
         page_ordering_rules_input, updates_input = input.strip.split(/\n\s*\n/, 2)
 
         page_ordering_rules = page_ordering_rules_input.lines.map do |line|
-          line.strip.split('|', 2).map(&:to_i)
+          line.strip.split('|').map(&:to_i)
         end
 
         updates = updates_input.lines.map do |line|
@@ -67,20 +67,21 @@ module Aoc
 
       def order_update(update, page_ordering_rules)
         applicable_rules = page_ordering_rules.select do |page_ordering_rule|
-          update.any? do |page|
-            page_ordering_rule.include?(page)
-          end
+          update.include?(page_ordering_rule[0]) && update.include?(page_ordering_rule[1])
         end
 
         update.sort do |a, b|
           rule = applicable_rules.find do |page_ordering_rule|
-            page_ordering_rule.include?(a) && page_ordering_rule.include?(b)
+            page_ordering_rule.sort == [a, b].sort
           end
 
           next 0 if rule.nil?
 
-          next -1 if a == rule[0]
-          next 1
+          if a == rule[0]
+            next -1
+          else
+            next 1
+          end
         end
       end
 

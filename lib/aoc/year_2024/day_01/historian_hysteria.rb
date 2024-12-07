@@ -20,10 +20,8 @@ module Aoc
         left_location_ids = []
         right_location_ids = []
 
-        input.lines.each do |row|
-          next if row == ''
-
-          left_location_id, right_location_id = row.match(/(\d+)\s+(\d+)/)[1, 2].map(&:to_i)
+        input.strip.lines.each do |row|
+          left_location_id, right_location_id = row.strip.match(/(\d+)\s+(\d+)/)[1, 2].map(&:to_i)
           left_location_ids << left_location_id
           right_location_ids << right_location_id
         end
@@ -32,12 +30,9 @@ module Aoc
       end
 
       def part_one(input)
-        left_location_ids, right_location_ids = parse(input)
+        left_location_ids, right_location_ids = parse(input).map(&:sort)
 
-        sorted_left_location_ids = left_location_ids.sort
-        sorted_right_location_ids = right_location_ids.sort
-
-        distances = sorted_left_location_ids.zip(sorted_right_location_ids).map do |left, right|
+        distances = left_location_ids.zip(right_location_ids).map do |left, right|
           (left - right).abs
         end
 
@@ -55,9 +50,9 @@ module Aoc
           similarity_scores_of_ids[location_id] = location_id * right_location_ids.count(location_id)
         end
 
-        left_location_ids.reduce(0) do |sum, location_id|
-          sum + similarity_scores_of_ids[location_id]
-        end
+        left_location_ids.map do |location_id|
+          similarity_scores_of_ids[location_id]
+        end.sum
       end
     end
   end

@@ -22,31 +22,32 @@ module Aoc
         end
       end
 
-      def safe?(report)
-        differences = report.each_cons(2).map{|first, second| second - first}
-
-        differences.all? { |diff| diff.between?(1, 3) } || differences.all? { |diff| diff.between?(-3, -1) }
+      def safe?
+        -> (report) do
+          differences = report.each_cons(2).map do |first, second|
+            second - first
+          end
+          differences.all? { |diff| diff.between?(1, 3) } || differences.all? { |diff| diff.between?(-3, -1) }
+        end
       end
 
       def part_one(input)
         reports = parse(input)
 
-        reports.count { |report| safe?(report) }
+        reports.count(&safe?)
       end
 
       def dampened_variations(report)
-        [report] + (0...report.length).map do |index|
-          report[0...index] + report[index + 1..-1]
-        end
+        report.length.times.map do |index|
+          report.values_at(0...index, (index + 1)..-1)
+        end + [report]
       end
 
       def part_two(input)
         reports = parse(input)
 
         reports.count do |report|
-          dampened_variations(report).any? do |damped_report|
-            safe?(damped_report)
-          end
+          dampened_variations(report).any?(&safe?)
         end
       end
     end
