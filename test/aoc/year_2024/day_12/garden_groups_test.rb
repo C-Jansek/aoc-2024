@@ -83,6 +83,65 @@ module Aoc
             assert_equal 24, Day12.new.find_fencing_cost(grid, 'S') # 3 * 8 = 24.
           end
         end
+
+        describe 'when using sides instead of edges' do
+          it 'correcly calculates the fencing costs' do
+            grid = [
+              ['A', 'A', 'A', 'A'],
+              ['B', 'B', 'C', 'D'],
+              ['B', 'B', 'C', 'C'],
+              ['E', 'E', 'E', 'C']
+            ]
+            assert_equal 16, Day12.new.find_fencing_cost_with_sides(grid, 'A') # 4 * 4 = 16
+            assert_equal 16, Day12.new.find_fencing_cost_with_sides(grid, 'B') # 4 * 4 = 16
+            assert_equal 32, Day12.new.find_fencing_cost_with_sides(grid, 'C') # 4 * 8 = 32
+            assert_equal 4, Day12.new.find_fencing_cost_with_sides(grid, 'D') # 1 * 4 = 4,
+            assert_equal 12, Day12.new.find_fencing_cost_with_sides(grid, 'E') # 3 * 4 = 12
+          end
+
+          describe 'with split regions' do
+            it 'correctly calculates the fencing costs' do
+              grid = [
+                ['O', 'O', 'O', 'O', 'O'],
+                ['O', 'X', 'O', 'X', 'O'],
+                ['O', 'O', 'O', 'O', 'O'],
+                ['O', 'X', 'O', 'X', 'O'],
+                ['O', 'O', 'O', 'O', 'O']
+              ]
+              assert_equal 436, Day12.new.find_fencing_cost_with_sides(grid, 'O') + Day12.new.find_fencing_cost_with_sides(grid, 'X') # 1 * 4 * 4 = 16
+            end
+
+            describe 'with an E shape' do
+              it 'correctly calculates the fencing costs' do
+                grid = [
+                  ['E', 'E', 'E', 'E', 'E'],
+                  ['E', 'X', 'X', 'X', 'X'],
+                  ['E', 'E', 'E', 'E', 'E'],
+                  ['E', 'X', 'X', 'X', 'X'],
+                  ['E', 'E', 'E', 'E', 'E']
+                ]
+                assert_equal 204, Day12.new.find_fencing_cost_with_sides(grid, 'E')
+                assert_equal 32, Day12.new.find_fencing_cost_with_sides(grid, 'X')
+              end
+            end
+          end
+
+          describe 'with the example input' do
+            it 'correctly calculates the fencing costs' do
+              grid = Day12.new.parse(Day12.example_input)
+
+              assert_equal 120, Day12.new.find_fencing_cost_with_sides(grid, 'R') # 12 * 10 = 120.
+              assert_equal 240, Day12.new.find_fencing_cost_with_sides(grid, 'I') # 4 * 4 + 14 * 16 = 16 + 224 = 240.
+              assert_equal 312, Day12.new.find_fencing_cost_with_sides(grid, 'C') # 14 * 22 + 1 * 4 = 308 + 4 = 312.
+              assert_equal 120, Day12.new.find_fencing_cost_with_sides(grid, 'F') # 10 * 12 = 120.
+              assert_equal 130, Day12.new.find_fencing_cost_with_sides(grid, 'V') # 13 * 10 = 130.
+              assert_equal 132, Day12.new.find_fencing_cost_with_sides(grid, 'J') # 11 * 12 = 132.
+              assert_equal 104, Day12.new.find_fencing_cost_with_sides(grid, 'E') # 13 * 8 = 104.
+              assert_equal 30, Day12.new.find_fencing_cost_with_sides(grid, 'M') # 5 * 6 = 30.
+              assert_equal 18, Day12.new.find_fencing_cost_with_sides(grid, 'S') # 3 * 6 = 18.
+            end
+          end
+        end
       end
 
       describe 'part one' do
@@ -105,7 +164,7 @@ module Aoc
 
         it 'provides the correct answer for the personal input' do
           personal_input = Day12.personal_input
-          assert_equal -1, Day12.new.part_two(personal_input)
+          assert_equal 821372, Day12.new.part_two(personal_input)
         end
       end
     end
