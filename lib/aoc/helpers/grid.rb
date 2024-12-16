@@ -72,6 +72,18 @@ module Aoc
         point.x >= 0 && point.x < width && point.y >= 0 && point.y < height
       end
 
+      def find_with_value(value)
+        row, y = points.each_with_index.find do |row, y|
+          row.include?(value)
+        end
+
+        _cell, x = row.each_with_index.find do |cell, x|
+          cell == value
+        end
+
+        Point[x, y]
+      end
+
       private
 
       def validate_parsing_mode(parsing_mode)
