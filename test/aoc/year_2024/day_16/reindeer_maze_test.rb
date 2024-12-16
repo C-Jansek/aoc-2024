@@ -50,14 +50,19 @@ module Aoc
       end
 
       describe 'part two' do
-        it 'provides the correct answer for the example' do
-          example_input = Day16.example_input
-          assert_equal -1, Day16.new.part_two(example_input)
+        it 'provides the correct answer for the small example' do
+          example_input = Day16.small_example_input
+          assert_equal 45, Day16.new.part_two(example_input)
+        end
+
+        it 'provides the correct answer for the large example' do
+          example_input = Day16.large_example_input
+          assert_equal 64, Day16.new.part_two(example_input)
         end
 
         it 'provides the correct answer for the personal input' do
           personal_input = Day16.personal_input
-          assert_equal -1, Day16.new.part_two(personal_input)
+          assert_equal 575, Day16.new.part_two(personal_input)
         end
       end
     end

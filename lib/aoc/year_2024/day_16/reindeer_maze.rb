@@ -87,7 +87,6 @@ module Aoc
             return current_distance
           end
 
-
           delta = Helpers::Grid::DIRECTION_TO_DELTA[current.direction]
           # puts current.direction.inspect
           # puts current.point.inspect
@@ -123,6 +122,54 @@ module Aoc
         false
       end
 
+      def find_all_best_paths(grid, start_position, start_direction, finish)
+        next_to_explore = [PointDirection[start_position, start_direction]]
+        seen = Set.new
+        distances = {
+          to_key(start_position, start_direction) => 0,
+        }
+        paths = {
+          "#{start_position.x},#{start_position.y}" => [[start_position]]
+        }
+
+        while next_to_explore.any?
+          current = next_to_explore.shift
+          next if seen.include?(current)
+          seen << current
+          current_distance = distances[to_key(current.point, current.direction)]
+          current_paths = paths["#{current.point.x},#{current.point.y}"]
+          puts "now exploring #{to_key(current.point, current.direction)}, distance: #{current_distance}"
+          # puts paths.inspect
+          if current.point == finish
+            return current_paths
+          end
+
+          delta = Helpers::Grid::DIRECTION_TO_DELTA[current.direction]
+          step_forward = Helpers::Grid::Point[current.point.x + delta.x, current.point.y + delta.y]
+          if grid.inside_grid(step_forward) && grid.points[step_forward.y][step_forward.x] != '#'
+            distances[to_key(step_forward, current.direction)] = [distances.fetch(to_key(step_forward, current.direction), 10_000_000_000), current_distance + 1].min
+            if distances[to_key(step_forward, current.direction)] == current_distance + 1
+              paths["#{step_forward.x},#{step_forward.y}"] = (paths.fetch("#{step_forward.x},#{step_forward.y}", []) + current_paths.map {|path| path + [step_forward]}).uniq
+            end
+            next_to_explore << PointDirection[step_forward, current.direction] unless seen.include?(PointDirection[step_forward, current.direction])
+          end
+
+          direction_clockwise = Helpers::Grid::Directions::ALL_DIRECT[(Helpers::Grid::Directions::ALL_DIRECT.index(current.direction) + 1) % Helpers::Grid::Directions::ALL_DIRECT.length]
+          distances[to_key(current.point, direction_clockwise)] = [distances.fetch(to_key(current.point, direction_clockwise), 10_000_000_000), current_distance + 1000].min
+          next_to_explore << PointDirection[current.point, direction_clockwise] unless seen.include?(PointDirection[current.point, direction_clockwise])
+
+          direction_counterclockwise = Helpers::Grid::Directions::ALL_DIRECT[(Helpers::Grid::Directions::ALL_DIRECT.index(current.direction) - 1) % Helpers::Grid::Directions::ALL_DIRECT.length]
+          distances[to_key(current.point, direction_counterclockwise)] = [distances.fetch(to_key(current.point, direction_counterclockwise), 10_000_000_000), current_distance + 1000].min
+          next_to_explore << PointDirection[current.point, direction_counterclockwise] unless seen.include?(PointDirection[current.point, direction_counterclockwise])
+
+          next_to_explore = next_to_explore.uniq.sort do |a, b|
+            distances[to_key(a.point, a.direction)] <=> distances[to_key(b.point, b.direction)]
+          end
+        end
+
+        false
+      end
+
       def part_one(input)
         parsed = parse(input)
 
@@ -137,7 +184,13 @@ module Aoc
       def part_two(input)
         parsed = parse(input)
 
-        nil
+        grid = parsed.dig(:grid)
+        start_position = parsed.dig(:start)
+        start_direction = parsed.dig(:start_direction)
+        finish = parsed.dig(:finish)
+
+        paths = find_all_best_paths(grid, start_position, start_direction, finish)
+        paths.flatten.uniq.count
       end
     end
   end
