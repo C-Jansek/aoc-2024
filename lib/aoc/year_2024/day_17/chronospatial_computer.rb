@@ -101,9 +101,21 @@ module Aoc
       def part_two(input, overwrite_a: -1)
         parsed = parse(input)
         program = parsed.dig(:program).map(&:to_s).join(',')
-
         puts program
-        part_one(input, overwrite_a: overwrite_a)[0]
+        # part_one(input, overwrite_a: overwrite_a)[0]
+        start = overwrite_a
+        step_size = 1
+        match_count = program.length
+
+        1000.times do |i|
+          ans = part_one(input, overwrite_a: start + step_size * i)[0]
+          puts "#{start + step_size * i} #{ans}"
+          # if ans[-match_count..-1] == program[-match_count..-1]
+          #   puts start + step_size * i
+          #   break
+          # end
+          return start + step_size * i if ans == program
+        end
       end
     end
   end
