@@ -108,12 +108,18 @@ module Aoc
           # assert_equal expected, Day17.new.part_one(personal_input)[0]
 
           # 106009656297627 TOO HIGH
-          assert 106009656297627 > Day17.new.part_two(personal_input)
-
+          ans = Day17.new.part_two(personal_input)
+          puts ans
+          assert 106009656297627 > ans
+          # 106009656297627
+          # 105872213245252
+          #
           # assert_equal expected, Day17.new.part_two(personal_input)
 
           # assert_equal expected, Day17.new.part_two(personal_input, overwrite_a: 35184372088832)
           # 109033313274266 TOO HIGH
+          # 106009656297627 TOO HIGH
+          # 105872213248410 WRONG
         end
       end
     end

@@ -105,40 +105,50 @@ module Aoc
         program_length = parsed.dig(:program).length
 
         # Find the upper and lower bounds of A by the length of the program
-        lower_bound = 9 ** (program_length - 2)
-        upper_bound = 9 ** (program_length)
+        # lower_bound = 9 ** (program_length - 2)
+        # upper_bound = [9 ** (program_length), (106009656297628*1.1).round].min
+        lower_bound = 105872213245252
+        upper_bound = 105872213251300
 
         puts program + "    actual"
 
         500.times do
-          step_count = 200
+          puts part_one(input, overwrite_a: lower_bound)[0] + "   lower_bound: #{lower_bound.to_s}"
+          puts part_one(input, overwrite_a: upper_bound)[0] + "    upper_bound: #{upper_bound.to_s}  "
+
+          step_count = 2500
           step_size = [((upper_bound - lower_bound) / step_count).round, 1].max
           guesses = step_count.times.map do |i|
             lower_bound + step_size * i
           end
 
           puts "#{upper_bound - lower_bound} left to search, step size #{step_size}"
-          puts part_one(input, overwrite_a: lower_bound)[0] + "   lower_bound: #{lower_bound.to_s}"
-          puts part_one(input, overwrite_a: upper_bound)[0] + "    upper_bound: #{upper_bound.to_s}  "
 
           to_overlapping = guesses.map do |guess|
             answer = part_one(input, overwrite_a: guess)[0]
             overlapping_count = answer.split(',').reverse.zip(program.split(',').reverse).take_while do |ans, actual|
               ans == actual
             end.count
-            overlapping_count = 0 if answer.length != program.length
+            overlapping_count = -1 if answer.length != program.length
+            puts "#{answer}   #{overlapping_count}   #{guess}"
+
             { guess: guess, ans: answer, overlapping: overlapping_count }
           end
 
-          max_overlap = to_overlapping.max {|overlap| overlap.fetch(:overlapping, - 1)}[:overlapping]
-          puts "max_overlap: #{max_overlap}"
-          first_most_overlapping_guess = to_overlapping.find do |overlap|
-            max_overlap == overlap.fetch(:overlapping, - 1)
-          end
+          max_overlap = to_overlapping.map {|overlap| overlap.fetch(:overlapping, - 1)}.max
 
-          last_most_overlapping_guess = to_overlapping.reverse.find do |overlap|
+          # raise StandardError.new("Cant specify enough") if max_overlap == last_max_overlap
+
+          puts "max_overlap: #{max_overlap}"
+          first_most_overlapping_guess_index = to_overlapping.index do |overlap|
             max_overlap == overlap.fetch(:overlapping, - 1)
-          end
+          end || 0
+          first_most_overlapping_guess_index -= 1 unless first_most_overlapping_guess_index.zero?
+
+          last_most_overlapping_guess_index = to_overlapping.length - (to_overlapping.reverse.index do |overlap|
+            max_overlap == overlap.fetch(:overlapping, - 1)
+          end || 1)
+          last_most_overlapping_guess_index += 1 unless last_most_overlapping_guess_index == to_overlapping.count - 1
 
           if step_size == 1
             puts program + "   actual"
@@ -149,9 +159,12 @@ module Aoc
             return good_guess&.fetch(:guess, false)
           end
 
-          lower_bound = guesses[[guesses.index(first_most_overlapping_guess[:guess]) - 1, 0].max]
-          upper_bound = guesses[[guesses.index(last_most_overlapping_guess[:guess]) + 1, guesses.length - 1].min]
+          last_max_overlap = max_overlap
+          lower_bound = guesses[first_most_overlapping_guess_index] || guesses.first
+          upper_bound = guesses[last_most_overlapping_guess_index] || guesses.last
         end
+
+        false
       end
     end
   end
