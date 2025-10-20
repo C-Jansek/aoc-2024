@@ -144,12 +144,22 @@ module Aoc
         wire_values.transform_values { |value| value ? 1 : 0 }
       end
 
-      def self.binary_output(processed_wire_values)
+      def self.binary_output(processed_wire_values, indicator: 'z')
         processed_wire_values.keys.filter do |key|
-          key.to_s[0] == 'z'
+          key.to_s[0] == indicator
         end.sort.reverse.map do |output_wire|
           processed_wire_values[output_wire]
         end.map(&:to_s).join('')
+      end
+
+      def self.numbers(initial_wire_values)
+        x = Day24.binary_output(initial_wire_values, indicator: 'x').to_i(2)
+        y = Day24.binary_output(initial_wire_values, indicator: 'y').to_i(2)
+        {
+          x: x,
+          y: y,
+          answer: x + y
+        }
       end
 
       def part_one(input)
