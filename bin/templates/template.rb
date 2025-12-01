@@ -1,5 +1,5 @@
 module Aoc
-  module Year2024
+  module YearYYYY
     class DayDD
       def self.example_input
         <<-INPUT.strip

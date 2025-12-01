@@ -3,7 +3,7 @@ require 'fileutils'
 require 'date'
 
 # Get parameters from ARGV
-day = ARGV[0] || Date.today.day.to_s.rjust(2, '0')
+day = (ARGV[0] || Date.today.day.to_s).rjust(2, '0')
 year = ARGV[1] || Date.today.year.to_s
 challenge_name = ARGV[2] || 'challenge'
 
