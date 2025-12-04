@@ -2,7 +2,7 @@ module Aoc
   module YearYYYY
     class DayDD
       def self.example_input
-        <<-INPUT.strip
+        <<~INPUT.strip
           
         INPUT
       end
