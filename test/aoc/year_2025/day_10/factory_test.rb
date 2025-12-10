@@ -30,6 +30,16 @@ module Aoc
           assert_equal 10, Day10.joltage_button_presses_required(Day10::Machine.new([false, true, true, false], [[3], [1, 3], [2], [2, 3], [0, 2], [0, 1]], [3, 5, 4, 7]))
           assert_equal 12, Day10.joltage_button_presses_required(Day10::Machine.new([false, false, false, true, false], [[0, 2, 3, 4], [2, 3], [0, 4], [0, 1, 2], [1, 2, 3, 4]], [7, 5, 12, 7, 2]))
           assert_equal 11, Day10.joltage_button_presses_required(Day10::Machine.new([false, true, true, true, false, true], [[0, 1, 2, 3, 4], [0, 3, 4], [0, 1, 2, 4, 5], [1, 2]], [10, 11, 11, 5, 10, 5]))
+          assert_equal 20, Day10.joltage_button_presses_required(Day10::Machine.new([false, true, true, false], [[3], [1, 3], [2], [2, 3], [0, 2], [0, 1]], [6, 10, 8, 14]))
+        end
+      end
+
+      describe 'distance left' do
+        it 'knows how much distance is left' do
+          assert_equal 0, Day10.distance_left([0, 0, 0, 0], [0, 0, 0, 0])
+          assert_equal 0, Day10.distance_left([1, 0, 0, 0], [1, 0, 0, 0])
+          assert_equal 1, Day10.distance_left([0, 0, 0, 0], [1, 0, 0, 0])
+          refute_equal Day10.distance_left([1, 0, 1, 0], [3, 5, 4, 7]), Day10.distance_left([0, 0, 1, 1], [3, 5, 4, 7])
         end
       end
 
