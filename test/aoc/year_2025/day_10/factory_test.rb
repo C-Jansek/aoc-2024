@@ -61,6 +61,11 @@ module Aoc
           assert_equal 33, Day10.new.part_two(example_input)
         end
 
+        it 'provides the correct answer for one of the personal input rows' do
+          input = "[.#.#....] (0,1,2,3,5,6,7) (0,1,2,6,7) (3) (0,5,6) (3,7) (0,2,3,5,7) (0,1,5,7) (1,3,4) (0,2,3,5,6) {86,57,60,72,9,70,49,74}"
+          assert_equal -1, Day10.new.part_two(input)
+        end
+
         it 'provides the correct answer for the personal input' do
           personal_input = Day10.personal_input
           assert_equal -1, Day10.new.part_two(personal_input)
